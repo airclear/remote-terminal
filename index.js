@@ -1,6 +1,6 @@
 // remote-terminal by JoshTheGeek
 
-var kDefaultPort = 8008;
+var kDefaultPort = 8081;
 var dnode = require('dnode');
 var net = require('net');
 
