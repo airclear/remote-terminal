@@ -15,5 +15,8 @@
     "console"
   ],
   "author": "JoshTheGeek",
-  "license": "BSD"
+  "license": "BSD",
+  "dependencies": {
+    "dnode": "~1.0.5"
+  }
 }
