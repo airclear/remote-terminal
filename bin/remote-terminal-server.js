@@ -23,23 +23,19 @@ if (!argv['disable-output']) {
 
 	process.stdin.resume();
 	process.stdin.on('data', function(data) {
-		// console.log('Stdin data: ' + data);
 		child.stdin.write(data);
 	});
 	
 	child.stdout.on('data', function(data) {
-		// console.log('Stdout data: ' + data);
 		process.stdout.write(data);
 	});
 
 	child.stderr.on('data', function(data) {
-		// console.log('Stderr data: ' + data);
 		process.stderr.write(data);
 	});
 }
 process.on('exit', function() {
 	child.kill();
-	// console.log('Killed child process');
 });
 child.on('exit', function() {
 	console.log('Child process died, exiting');
