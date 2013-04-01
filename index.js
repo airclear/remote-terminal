@@ -33,8 +33,8 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 				if (!cb) cb = function() {};
 				msg = msg.toString();
 
+				console.log(gray + '[Remote -> Server] ' + msg.slice(0, -1) + reset);
 				cb(self.stdin.write(msg));
-				console.log(gray + '[Remote -> Server] ' + msg + reset);
 			},
 			attachStdoutListener: function(listener, event, cb) {
 				if (!cb) cb = function() {};
