@@ -1,7 +1,6 @@
 // remote-terminal by JoshTheGeek
 
 var clientObj = require('../index').RemoteTerminalClient;
-var optimist = require('optimist');
 
 
 var argv = require('optimist').argv;

@@ -6,14 +6,12 @@ var childProcess = require('child_process');
 
 var argv = require('optimist').argv;
 if (argv._.length == 0) {
-	console.log('A command is required!');
+	console.error('A command is required!');
 	process.exit();
 }
 
 var cmd = argv._.shift();
 var args = argv._;
-console.log('Cmd: ' + cmd);
-console.log(args);
 
 var child = childProcess.spawn(cmd, args, {
 	cwd: '.'
