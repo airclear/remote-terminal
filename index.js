@@ -3,6 +3,7 @@
 var kDefaultPort = 8081;
 var dnode = require('dnode');
 var net = require('net');
+var crypto = require('crypto');
 
 
 exports.md5 = function(str) {
@@ -27,18 +28,24 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 		var session = {
 			sendStdin: function(msg, cb) {
 				if (!cb) cb = function() {};
+				msg = msg.toString();
 
+				console.log('sendStdin received: ' + msg);
 				cb(self.stdin.write(msg));
 			},
 			attachStdoutListener: function(listener, event, cb) {
 				if (!cb) cb = function() {};
 
-				cb(self.stdout.on(event || 'data', listener));
+				cb(self.stdout.on(event || 'data', function(data) {
+					listener(data.toString());
+				}));
 			},
 			attachStderrListener: function(listener, event, cb) {
 				if (!cb) cb = function() {};
 
-				cb(self.stderr.on(event || 'data', listener));
+				cb(self.stderr.on(event || 'data', function(data) {
+					listener(data.toString());
+				}));
 			},
 			removeStdoutListener: function(listener, event, cb) {
 				if (!cb) cb = function() {};
@@ -92,19 +99,19 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 
 			if (self.stdout) {
 				session.attachStdoutListener(function(data) {
-					self.stdout.write(data);
+					self.stdout.write(data.toString());
 				});
 			}
 
 			if (self.stderr) {
 				session.attachStderrListener(function(data) {
-					self.stderr.write(data);
+					self.stderr.write(data.toString());
 				});
 			}
 
 			if (self.stdin) {
 				self.stdin.on('data', function(data) {
-					session.sendStdin(data);
+					session.sendStdin(data.toString());
 				});
 			}
 		});
