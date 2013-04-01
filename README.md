@@ -12,7 +12,7 @@ remote-terminal-server -u JoshTheGeek -p your-password-here java -jar minecraft_
 ### To connect to the server:
 ``` shell
 ssh -fNL 8081:localhost:8081 user@serverAddress
-remote-terminal-client -u JoshTheGeek -p your-password-here localhost:8081
+remote-terminal-client -u JoshTheGeek -p your-password-here --port=8081 localhost
 ```
 That opens a tunnel to user@serverAddress, so port 8081 locally is securely transferred to port 8081 on serverAddress. Then the client connects to the remote terminal server through the tunnel. To kill the tunnel later, just
 ``` shell
