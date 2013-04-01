@@ -4,7 +4,23 @@ var serverObj = require('../index').RemoteTerminalServer;
 var childProcess = require('child_process');
 
 
-var argv = require('optimist').argv;
+var optimist = require('optimist')
+			   .usage('Usage: $0 [options] <script>')
+			   .describe('user', 'Username to require').alias('user', 'u')
+			   .describe('pass', 'Password').alias('pass', 'p')
+			   .describe('port', 'Port to listen on').check(function(val) {
+			   	   var isNum = !isNaN(new Number(val));
+			   	   if (!isNum) throw new Error('--port must be a number!');
+			       return isNum; // Ensure port is a number
+			   })
+			   .describe('help', 'Show this help').boolean('help');
+var argv = optimist.argv;
+
+if (argv.help) {
+	console.log(optimist.help());
+	process.exit();
+}
+
 if (argv._.length == 0) {
 	console.error('A command is required!');
 	process.exit();
@@ -16,6 +32,7 @@ var args = argv._;
 var child = childProcess.spawn(cmd, args, {
 	cwd: '.'
 });
+
 if (!argv['disable-output']) {
 	process.stdin.resume();
 	process.stdin.on('data', function(data) {
@@ -30,6 +47,7 @@ if (!argv['disable-output']) {
 		process.stderr.write(data);
 	});
 }
+
 process.on('exit', function() {
 	child.kill();
 });
