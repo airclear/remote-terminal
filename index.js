@@ -59,7 +59,7 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 			}
 		});
 
-		self.d.pipe(stream).pipe(d);
+		self.d.pipe(stream).pipe(self.d);
 	});
 	
 	this.listen = function(port) {
@@ -79,7 +79,7 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 	var self = this;
 	this.remote = null;
 
-	this.d = host ? dnode.connect(host, port) : dnode.connect(port);
+	this.d = self.host ? dnode.connect(self.host, self.port) : dnode.connect(self.port);
 	this.d.on('remote', function(remote) {
 		self.remote = remote;
 		remote.auth(self.user, self.pass, function(err, session) {
@@ -108,5 +108,10 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 				});
 			}
 		});
+	});
+
+	this.d.on('end', function() {
+		console.log('Connection lost!');
+		process.exit();
 	});
 }

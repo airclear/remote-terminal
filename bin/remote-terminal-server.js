@@ -12,8 +12,12 @@ if (argv._.length == 0) {
 
 var cmd = argv._.shift();
 var args = argv._;
+console.log('Cmd: ' + cmd);
+console.log(args);
 
-var child = childProcess.spawn(cmd, args);
+var child = childProcess.spawn(cmd, args, {
+	cwd: '.'
+});
 if (!argv['disable-output']) {
 	process.stdin.on('data', function(data) {
 		child.stdin.write(data);
@@ -27,6 +31,14 @@ if (!argv['disable-output']) {
 		process.stderr.write(data);
 	});
 }
+process.on('exit', function() {
+	child.kill();
+	console.log('Killed child process');
+});
+child.on('exit', function() {
+	console.log('Child process died, exiting');
+	process.exit();
+})
 
 var server = new serverObj(child.stdout, child.stderr, child.stdin, argv.user || argv.u || '', argv.pass || argv.p || '');
 server.listen(argv.port || process.env.PORT || false);
