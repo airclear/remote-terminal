@@ -118,7 +118,7 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 	});
 
 	this.d.on('end', function() {
-		console.log('Connection lost!');
+		self.stderr.write('Connection lost!\n');
 		process.exit();
 	});
 }

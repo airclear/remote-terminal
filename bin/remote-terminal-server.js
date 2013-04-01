@@ -38,7 +38,7 @@ process.on('exit', function() {
 child.on('exit', function() {
 	console.log('Child process died, exiting');
 	process.exit();
-})
+});
 
 var server = new serverObj(child.stdout, child.stderr, child.stdin, argv.user || argv.u || '', argv.pass || argv.p || '');
 server.listen(argv.port || process.env.PORT || false);
