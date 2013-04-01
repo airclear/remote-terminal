@@ -9,13 +9,13 @@ exports.md5 = function(str) {
 	return crypto.createHash('md5').update(str).digest('hex');
 }
 
-exports.RemoteTerminalServer = function(port, stdout, stderr, stdin, user, pass) {
-	this.port = port;
+exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
+	this.port = -1;
 	this.stdout = stdout;
 	this.stderr = stderr;
 	this.stdin = stdin;
-	this.user = user;
-	this.pass = pass ? exports.md5(pass) : null;;
+	this.user = (user && user != '') ? user : '';
+	this.pass = (pass && pass != '') ? exports.md5(pass) : '';
 	var self = this;
 
 	function auth(user, pass) {
@@ -62,8 +62,9 @@ exports.RemoteTerminalServer = function(port, stdout, stderr, stdin, user, pass)
 		self.d.pipe(stream).pipe(d);
 	});
 	
-	this.listen = function() {
-		this.server.listen(port || kDefaultPort);
+	this.listen = function(port) {
+		self.port = port;
+		self.server.listen(port || kDefaultPort);
 	}
 }
 
@@ -73,8 +74,8 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 	this.stdout = stdout;
 	this.stderr = stderr;
 	this.stdin = stdin;
-	this.user = user;
-	this.pass = pass ? exports.md5(pass) : null;
+	this.user = (user && user != '') ? user : '';
+	this.pass = (pass && pass != '') ? exports.md5(pass) : '';
 	var self = this;
 	this.remote = null;
 
