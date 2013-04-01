@@ -5,6 +5,9 @@ var dnode = require('dnode');
 var net = require('net');
 var crypto = require('crypto');
 
+var gray = '\033[1m\033[30m';
+var reset = '\033[0m';
+
 
 exports.md5 = function(str) {
 	return crypto.createHash('md5').update(str).digest('hex');
@@ -30,8 +33,8 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 				if (!cb) cb = function() {};
 				msg = msg.toString();
 
-				console.log('sendStdin received: ' + msg);
 				cb(self.stdin.write(msg));
+				console.log(gray + '[Remote -> Server] ' + msg + reset);
 			},
 			attachStdoutListener: function(listener, event, cb) {
 				if (!cb) cb = function() {};
