@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 // remote-terminal by JoshTheGeek
 
 var clientObj = require('../index').RemoteTerminalClient;
