@@ -53,5 +53,5 @@ child.on('exit', function() {
 	process.exit();
 });
 
-var server = new serverObj(child.stdout, child.stderr, child.stdin, argv.user || argv.u || '', argv.pass || argv.p || '');
+var server = new serverObj(child.stdout, child.stderr, child.stdin, argv.user || '', argv.pass || '');
 server.listen(argv.port || process.env.PORT || false);
