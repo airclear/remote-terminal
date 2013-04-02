@@ -9,12 +9,7 @@ var optimist = require('optimist')
 			   .describe('user', 'Username').alias('user', 'u')
 			   .describe('pass', 'Password').alias('pass', 'p')
 			   .describe('host', 'Host to connect to').alias('host', 'h')
-			   .describe('port', 'Port to connect to (or env.PORT)').check(function(val) {
-			   	   if (!val || val == '') return true;
-			   	   var isNum = !isNaN(new Number(val));
-			   	   if (!isNum) throw new Error('--port must be a number!');
-			       return isNum; // Ensure port is a number
-			   })
+			   .describe('port', 'Port to connect to (or env.PORT)')
 			   .describe('help', 'Show this help').boolean('help');
 var argv = optimist.argv;
 
