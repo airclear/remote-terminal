@@ -59,6 +59,15 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 				if (!cb) cb = function() {};
 
 				cb(self.stderr.removeListener(event || 'data', listener));
+			},
+			stdin: function(cb) {
+				cb(self.stdin);
+			},
+			stdout: function(cb) {
+				cb(self.stdout);
+			},
+			stderr: function(cb) {
+				cb(self.stderr);
 			}
 		}
 		self.d = dnode({
@@ -78,7 +87,7 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 	}
 }
 
-exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user, pass) {
+exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user, pass, remoteCallback) {
 	this.port = port || kDefaultPort;
 	this.host = host;
 	this.stdout = stdout;
@@ -86,6 +95,7 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 	this.stdin = stdin;
 	this.user = (user && user != '') ? user : '';
 	this.pass = (pass && pass != '') ? exports.md5(pass) : '';
+	this.remoteCallback = remoteCallback;
 	var self = this;
 	this.remote = null;
 
@@ -96,6 +106,7 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 			if (err) {
 				stderr.write('Error authenticating with remote: ' + err + '\n');
 				self.d.end();
+				process.exit();
 
 				return;
 			}
@@ -117,6 +128,8 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 					session.sendStdin(data.toString());
 				});
 			}
+
+			self.remoteCallback(remote);
 		});
 	});
 

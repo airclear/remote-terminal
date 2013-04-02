@@ -19,4 +19,10 @@ if (argv.help) {
 }
 
 process.stdin.resume();
-var client = new clientObj(argv.host || argv.h || false, argv.port || process.env.PORT || false, process.stdout, process.stderr, process.stdin, argv.user || argv.u || '', argv.pass || argv.p || '');
+var client = new clientObj(argv.host || argv.h || false, argv.port || process.env.PORT || false, process.stdout, process.stderr, process.stdin, argv.user || argv.u || '', argv.pass || argv.p || '', function(remote) {
+	remote.stdout(function(stdout) {
+		stdout.on('close', function() {
+			console.log('Remote script stopped! Stopping...');
+		});
+	});
+});
