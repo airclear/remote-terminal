@@ -23,7 +23,10 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 	var self = this;
 
 	function auth(user, pass) {
-		if (self.user && self.pass && (self.user != user || self.pass != pass)) return false;
+		if (self.user && (self.user != user)) return false;
+		if (self.pass && (self.pass != pass)) return false;
+		if (!self.user && user) return false;
+		if (!self.pass && pass) return false;
 		return true;
 	}
 
@@ -87,7 +90,7 @@ exports.RemoteTerminalServer = function(stdout, stderr, stdin, user, pass) {
 	}
 }
 
-exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user, pass, remoteCallback) {
+exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user, pass, sessionCallback) {
 	this.port = port || kDefaultPort;
 	this.host = host;
 	this.stdout = stdout;
@@ -95,7 +98,7 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 	this.stdin = stdin;
 	this.user = (user && user != '') ? user : '';
 	this.pass = (pass && pass != '') ? exports.md5(pass) : '';
-	this.remoteCallback = remoteCallback;
+	this.sessionCallback = sessionCallback;
 	var self = this;
 	this.remote = null;
 
@@ -129,7 +132,7 @@ exports.RemoteTerminalClient = function(host, port, stdout, stderr, stdin, user,
 				});
 			}
 
-			self.remoteCallback(remote);
+			self.sessionCallback(session, remote);
 		});
 	});
 
