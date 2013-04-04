@@ -1,6 +1,6 @@
 {
   "name": "remote-terminal",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Run a command inside of remote-terminal-host, and connect to it using remote-terminal-client to control a app, like a Minecraft server, over SSH",
   "main": "index.js",
   "scripts": {
